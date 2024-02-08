@@ -1,5 +1,7 @@
 package com.jonas.tools.nai;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,5 +21,9 @@ public class FeedingRecordService {
         feedingRecord.setCreatedAndModified(new Date());
         feedingRecordRepo.save(feedingRecord);
         return feedingRecord;
+    }
+
+    public Page<FeedingRecord> getFeedingRecordPage(Pageable pageable) {
+        return feedingRecordRepo.findAll(pageable);
     }
 }

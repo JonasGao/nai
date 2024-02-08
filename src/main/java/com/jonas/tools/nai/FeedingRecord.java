@@ -7,6 +7,8 @@ import java.time.LocalTime;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -44,6 +46,7 @@ public class FeedingRecord implements Serializable {
      * 【枚举定义】喂养行为类型
      */
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Operation operation;
 
     /**
