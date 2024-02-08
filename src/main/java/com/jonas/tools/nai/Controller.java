@@ -7,8 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller {
 
-    @PostMapping("/api/feeding-record")
-    public void addRecord(@RequestBody FeedingRecord feedingRecord) {
+    private final FeedingRecordService feedingRecordService;
 
+    public Controller(FeedingRecordService feedingRecordService) {
+        this.feedingRecordService = feedingRecordService;
+    }
+
+    @PostMapping("/api/feeding-record")
+    public FeedingRecord addRecord(@RequestBody AddFeedingRecord addFeedingRecord) {
+        return feedingRecordService.addOneRecord(addFeedingRecord);
     }
 }
