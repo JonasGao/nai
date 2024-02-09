@@ -1,42 +1,28 @@
 import styles from "./page.module.css";
 import React, {useEffect, useState} from "react";
-import {Box, Card, CardContent, Container, CssBaseline, Stack, Typography} from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Radio,
+  CardContent,
+  Container,
+  CssBaseline, FormControl, FormControlLabel, FormLabel, RadioGroup,
+  Stack,
+  TextField,
+  Typography
+} from "@mui/material";
 import {margin} from "@mui/system";
 import {LocalCafe} from "@mui/icons-material"
+import Item, {FeedingRecord} from "../components/Item"
+import AddForm from "../components/AddForm";
 
-type FeedingRecord = {
-  date: string, time: string, operation: string, value1: number, value2: number
-}
-
-type ItemProps = {
-  data: FeedingRecord
-}
-
-function Item(props: ItemProps) {
-  const {data} = props;
-  return (
-    <Card>
-      <CardContent sx={{display:"flex",alignContent:"center"}}>
-        <Typography variant={"body1"} display={"inline"}>
-          {data.date} {data.time}
-        </Typography>
-        <LocalCafe/>
-        <Typography variant={"body1"} display={"inline"}>
-          {data.operation}
-        </Typography>
-        <Typography variant={"body1"} display={"inline"}>
-          {data.value1}
-        </Typography>
-        <Typography variant={"body1"} display={"inline"}>
-          {data.value2}
-        </Typography>
-      </CardContent>
-    </Card>
-  )
+type Response = {
+  content: FeedingRecord[]
 }
 
 export default function Home() {
-  const [data, setData] = useState({content: []})
+  const [data, setData] = useState<Response>({content: []})
   useEffect(() => {
     fetch("/api/feeding-records")
       .then(r => r.json())
@@ -46,6 +32,7 @@ export default function Home() {
     <React.Fragment>
       <CssBaseline/>
       <Container maxWidth="sm" sx={{marginTop: 2, marginBottom: 2}}>
+        <AddForm/>
         <Stack spacing={2}>
           {data.content.map(item => <Item data={item}/>)}
         </Stack>
