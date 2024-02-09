@@ -5,38 +5,38 @@ import {margin} from "@mui/system";
 import {LocalCafe} from "@mui/icons-material"
 
 type FeedingRecord = {
-date:string,time:string,operation:string,value1:number,value2:number
+  date: string, time: string, operation: string, value1: number, value2: number
 }
 
 type ItemProps = {
   data: FeedingRecord
 }
 
-function Item(props:ItemProps) {
+function Item(props: ItemProps) {
   const {data} = props;
- return (
-   <Card>
-     <CardContent>
-       <Typography variant={"body1"} display={"inline"}>
-         {data.date} {data.time}
-       </Typography>
-       <LocalCafe/>
-       <Typography display={"inline"}>
-         {data.operation}
-       </Typography>
-         <Typography display={"inline"}>
-         {data.value1}
-       </Typography>
-         <Typography display={"inline"}>
-         {data.value2}
-       </Typography>
-     </CardContent>
-   </Card>
- )
+  return (
+    <Card>
+      <CardContent sx={{display:"flex",alignContent:"center"}}>
+        <Typography variant={"body1"} display={"inline"}>
+          {data.date} {data.time}
+        </Typography>
+        <LocalCafe/>
+        <Typography variant={"body1"} display={"inline"}>
+          {data.operation}
+        </Typography>
+        <Typography variant={"body1"} display={"inline"}>
+          {data.value1}
+        </Typography>
+        <Typography variant={"body1"} display={"inline"}>
+          {data.value2}
+        </Typography>
+      </CardContent>
+    </Card>
+  )
 }
 
 export default function Home() {
-  const [data, setData] = useState({content:[]})
+  const [data, setData] = useState({content: []})
   useEffect(() => {
     fetch("/api/feeding-records")
       .then(r => r.json())
