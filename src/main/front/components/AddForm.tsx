@@ -4,15 +4,22 @@ import FormFields, {Operation} from "./FormFields";
 import dayjs from "dayjs";
 
 export default function AddForm() {
-  const [operation,setOperation] = useState<Operation>(`BREAST_MILK`)
+  const [operation, setOperation] = useState<Operation>(`BREAST_MILK`)
   const [datetime, setDatetime] = useState(new Date())
   const datetimeValue = useMemo(() =>
-    dayjs(datetime).format("YYYY-MM-DDTHH:mm:ss"), [])
+    dayjs(datetime).format("YYYY-MM-DDTHH:mm:ss"), [datetime])
+  const handleDatetimeChange = useMemo(() => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDatetime(dayjs(e.target.value).toDate())
+  }, [setDatetime])
+  const handleOperationChange = useMemo(() => (e:React.ChangeEvent<HTMLInputElement>, value:string) => {
+    setOperation(value as Operation)
+  }, [setOperation])
   return (
     <React.Fragment>
       <FormControl>
         <RadioGroup
-          defaultValue={operation}
+          value={operation}
+          onChange={handleOperationChange}
           row
           name="operations"
         >
@@ -24,7 +31,8 @@ export default function AddForm() {
         </RadioGroup>
       </FormControl>
       <Box component={"form"}>
-        <TextField id="time" type="datetime-local" label="Time" variant="standard" value={datetimeValue}/>
+        <TextField id="time" type="datetime-local" label="Time" variant="standard" value={datetimeValue}
+                   onChange={handleDatetimeChange}/>
         <FormFields operation={operation}/>
       </Box>
     </React.Fragment>

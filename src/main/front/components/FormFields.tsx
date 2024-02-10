@@ -1,5 +1,7 @@
 import {FormControlLabel, Radio, TextField} from "@mui/material";
 import React from "react";
+import BreastMilkFields from "./BreastMilkFields";
+import BottleFeedingFields from "./BottleFeedingFields";
 
 export type Operation = "BREAST_MILK" | "BOTTLE_FEEDING" | "MILK_POWDER" | "BIG_ONE" | "LITTLE_ONE"
 
@@ -8,10 +10,8 @@ type FormFieldsProps = {
 }
 
 export default function FormFields(props: FormFieldsProps) {
-  return (
-    <React.Fragment>
-      <TextField id="value1" type="number" label="Value1" variant="standard"/>
-      <TextField id="value2" type="number" label="Value2" variant="standard"/>
-    </React.Fragment>
-  )
+  switch (props.operation) {
+    case "BREAST_MILK": return <BreastMilkFields/>
+    case "BOTTLE_FEEDING": return <BottleFeedingFields/>
+  }
 }
