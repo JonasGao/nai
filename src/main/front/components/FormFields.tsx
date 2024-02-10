@@ -1,11 +1,13 @@
-import {TextField} from "@mui/material";
+import {FormControlLabel, Radio, TextField} from "@mui/material";
 import React from "react";
 
+export type Operation = "BREAST_MILK" | "BOTTLE_FEEDING" | "MILK_POWDER" | "BIG_ONE" | "LITTLE_ONE"
+
 type FormFieldsProps = {
-  operation: string
+  operation: Operation
 }
 
-export default function FormFields(props:FormFieldsProps) {
+export default function FormFields(props: FormFieldsProps) {
   return (
     <React.Fragment>
       <TextField id="value1" type="number" label="Value1" variant="standard"/>

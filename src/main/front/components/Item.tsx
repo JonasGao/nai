@@ -1,9 +1,10 @@
 import {Box, Typography} from "@mui/material";
 import {LocalCafe} from "@mui/icons-material";
 import React from "react";
+import {Operation} from "./FormFields";
 
 export type FeedingRecord = {
-  date: string, time: string, operation: string, value1: number, value2: number
+  date: string, time: string, operation: Operation, value1: number, value2: number
 }
 
 type ItemProps = {

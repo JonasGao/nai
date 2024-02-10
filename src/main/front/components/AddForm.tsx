@@ -1,10 +1,10 @@
 import {Box, FormControl, FormControlLabel, Radio, RadioGroup, TextField} from "@mui/material";
 import React, {useMemo, useState} from "react";
-import FormFields from "./FormFields";
+import FormFields, {Operation} from "./FormFields";
 import dayjs from "dayjs";
 
 export default function AddForm() {
-  const [operation,setOperation] = useState(`BREAST_MILK`)
+  const [operation,setOperation] = useState<Operation>(`BREAST_MILK`)
   const [datetime, setDatetime] = useState(new Date())
   const datetimeValue = useMemo(() =>
     dayjs(datetime).format("YYYY-MM-DDTHH:mm:ss"), [])
