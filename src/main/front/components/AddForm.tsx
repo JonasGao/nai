@@ -1,9 +1,13 @@
 import {Box, FormControl, FormControlLabel, Radio, RadioGroup, TextField} from "@mui/material";
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import FormFields from "./FormFields";
+import dayjs from "dayjs";
 
 export default function AddForm() {
   const [operation,setOperation] = useState(`BREAST_MILK`)
+  const [datetime, setDatetime] = useState(new Date())
+  const datetimeValue = useMemo(() =>
+    dayjs(datetime).format("YYYY-MM-DDTHH:mm:ss"), [])
   return (
     <React.Fragment>
       <FormControl>
@@ -20,6 +24,7 @@ export default function AddForm() {
         </RadioGroup>
       </FormControl>
       <Box component={"form"}>
+        <TextField id="time" type="datetime-local" label="Time" variant="standard" value={datetimeValue}/>
         <FormFields operation={operation}/>
       </Box>
     </React.Fragment>
