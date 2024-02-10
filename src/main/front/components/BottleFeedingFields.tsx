@@ -1,10 +1,16 @@
-import React from "react";
+import React, {useMemo} from "react";
 import {TextField} from "@mui/material";
 
-export default function BottleFeedingFields() {
+type BottleFeedingFieldsProps = {
+  value1: number,
+  onChange: (value1: number) => void
+}
+export default function BottleFeedingFields(props: BottleFeedingFieldsProps) {
+  const handleChange = useMemo(() => (e: React.ChangeEvent<HTMLInputElement>) => {
+    props.onChange(parseInt(e.target.value))
+  }, [props.onChange])
   return (
-    <React.Fragment>
-      <TextField id="value1" type="number" label="瓶喂 (ml)" variant="standard"/>
-    </React.Fragment>
+    <TextField id="value1" type="number" label="瓶喂 (ml)" variant="standard" value={props.value1}
+               onChange={handleChange}/>
   )
 }
