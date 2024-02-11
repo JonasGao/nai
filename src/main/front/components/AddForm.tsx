@@ -1,9 +1,14 @@
 "use client";
 
-import {Box, FormControl, FormControlLabel, Radio, RadioGroup, TextField} from "@mui/material";
+import {Box, Button, FormControl, FormControlLabel, Radio, RadioGroup, TextField} from "@mui/material";
 import React, {useMemo, useState} from "react";
 import FormFields, {Operation} from "./FormFields";
 import dayjs from "dayjs";
+import {FeedingRecord} from "./Item";
+
+type AddFeedingRecord = {
+  time: string, operation: Operation, value1: number, value2: number | null
+}
 
 export default function AddForm() {
   const [operation, setOperation] = useState<Operation>(`BREAST_MILK`)
@@ -20,6 +25,20 @@ export default function AddForm() {
   const handleValuesChange = useMemo(() => (value1: number, value2: number | null) => {
     setValues([value1, value2])
   }, [setValues])
+  const handleSubmit = useMemo(() => () => {
+    fetch("/api/feeding-record", {
+      method: "POST",
+      headers: [
+        ["Content-Type", "application/json"]
+      ],
+      body: JSON.stringify({
+        operation: operation,
+        value1: value1,
+        value2: value2,
+        time: datetime.toISOString(),
+      })
+    })
+  }, [operation, value1, value2, datetime])
   return (
     <React.Fragment>
       <FormControl>
@@ -41,6 +60,7 @@ export default function AddForm() {
                    onChange={handleDatetimeChange}/>
         <FormFields operation={operation} value1={value1} value2={value2} onChange={handleValuesChange}/>
       </Box>
+      <Button onClick={handleSubmit}>提交</Button>
     </React.Fragment>
   )
 }

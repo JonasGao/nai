@@ -8,7 +8,9 @@ type Response = {
 }
 
 async function getData(): Promise<Response> {
-  const res = await fetch("http://127.0.0.1:8080/api/feeding-records")
+  const res = await fetch("http://127.0.0.1:8080/api/feeding-records", {
+    cache: "no-store"
+  })
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
