@@ -3,6 +3,8 @@ package com.jonas.tools.nai;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +25,7 @@ public class Controller {
     }
 
     @GetMapping("/api/feeding-records")
-    public Page<FeedingRecord> getFeedingRecordPage(Pageable pageRequest) {
+    public Page<FeedingRecord> getFeedingRecordPage(@PageableDefault(sort = {"date","time"}, direction = Sort.Direction.DESC) Pageable pageRequest) {
         return feedingRecordService.getFeedingRecordPage(pageRequest);
     }
 }
