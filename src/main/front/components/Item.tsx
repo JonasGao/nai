@@ -4,6 +4,7 @@ import React from "react";
 import {Operation} from "./FormFields";
 
 export type FeedingRecord = {
+  id: number,
   date: string, time: string, operation: Operation, value1: number, value2: number
 }
 

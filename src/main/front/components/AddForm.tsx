@@ -1,3 +1,5 @@
+"use client";
+
 import {Box, FormControl, FormControlLabel, Radio, RadioGroup, TextField} from "@mui/material";
 import React, {useMemo, useState} from "react";
 import FormFields, {Operation} from "./FormFields";
