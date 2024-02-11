@@ -2,6 +2,7 @@ import React from "react";
 import {Container, CssBaseline, Stack,} from "@mui/material";
 import Item, {FeedingRecord} from "../components/Item"
 import AddForm from "../components/AddForm";
+import AlertDialog from "../components/AlertDialog";
 
 type Response = {
   content: FeedingRecord[]
@@ -27,6 +28,7 @@ export default async function Home() {
         <Stack spacing={2}>
           {data.content.map(item => <Item key={item.id} data={item}/>)}
         </Stack>
+        <AlertDialog/>
       </Container>
     </React.Fragment>
   );

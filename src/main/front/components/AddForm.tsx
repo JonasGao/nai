@@ -6,6 +6,7 @@ import FormFields, {Operation} from "./FormFields";
 import dayjs from "dayjs";
 import {FeedingRecord} from "./Item";
 import {useRouter} from "next/navigation";
+import AlertDialog, {AlertErrorDetail} from "./AlertDialog";
 
 type AddFeedingRecord = {
   time: string, operation: Operation, value1: number, value2: number | null
@@ -41,12 +42,15 @@ export default function AddForm() {
       })
     }).then(resp => {
       if (resp.ok) {
+        setDatetime(new Date())
         router.refresh()
+      } else {
+        document.dispatchEvent(new CustomEvent<AlertErrorDetail>("alert-error", {detail: {message: "提交失败了！"}}))
       }
     })
   }, [operation, value1, value2, datetime])
   return (
-    <React.Fragment>
+    <Box>
       <FormControl>
         <RadioGroup
           value={operation}
@@ -67,6 +71,6 @@ export default function AddForm() {
         <FormFields operation={operation} value1={value1} value2={value2} onChange={handleValuesChange}/>
       </Box>
       <Button onClick={handleSubmit}>提交</Button>
-    </React.Fragment>
+    </Box>
   )
 }
