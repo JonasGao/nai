@@ -5,12 +5,14 @@ import React, {useMemo, useState} from "react";
 import FormFields, {Operation} from "./FormFields";
 import dayjs from "dayjs";
 import {FeedingRecord} from "./Item";
+import {useRouter} from "next/navigation";
 
 type AddFeedingRecord = {
   time: string, operation: Operation, value1: number, value2: number | null
 }
 
 export default function AddForm() {
+  const router = useRouter()
   const [operation, setOperation] = useState<Operation>(`BREAST_MILK`)
   const [datetime, setDatetime] = useState(new Date())
   const datetimeValue = useMemo(() =>
@@ -37,6 +39,10 @@ export default function AddForm() {
         value2: value2,
         time: datetime.toISOString(),
       })
+    }).then(resp => {
+      if (resp.ok) {
+        router.refresh()
+      }
     })
   }, [operation, value1, value2, datetime])
   return (
