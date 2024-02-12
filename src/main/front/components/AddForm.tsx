@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import FormFields, { Operation } from "./FormFields";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { AlertErrorDetail } from "./AlertDialog";
 
@@ -28,23 +28,32 @@ export default function AddForm() {
   const now = dayjs();
   const [date, setDate] = useState(now.format("YYYY-MM-DD"));
   const [time, setTime] = useState(now.format("HH:mm:ss"));
+  const [datetimeChanged, setDatetimeChanged] = useState(false);
   const handleDateChange = useMemo(
     () => (e: React.ChangeEvent<HTMLInputElement>) => {
       setDate(e.target.value);
+      setDatetimeChanged(true);
     },
-    [setDate],
+    [],
   );
   const handleTimeChange = useMemo(
     () => (e: React.ChangeEvent<HTMLInputElement>) => {
       setTime(e.target.value);
+      setDatetimeChanged(true);
     },
-    [setTime],
+    [],
   );
   const handleOperationChange = useMemo(
-    () => (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
+    () => (_e: React.ChangeEvent<HTMLInputElement>, value: string) => {
       setOperation(value as Operation);
+      if (!datetimeChanged) {
+        // 如果没有人工修改过，则自动更新时间
+        const now = dayjs();
+        setDate(now.format("YYYY-MM-DD"));
+        setTime(now.format("HH:mm:ss"));
+      }
     },
-    [setOperation],
+    [datetimeChanged],
   );
   const [[value1, value2], setValues] = useState<[number, number | null]>([
     0,
@@ -54,7 +63,7 @@ export default function AddForm() {
     () => (value1: number, value2: number | null) => {
       setValues([value1, value2]);
     },
-    [setValues],
+    [],
   );
   const handleSubmit = useMemo(
     () => () => {
@@ -69,10 +78,12 @@ export default function AddForm() {
         }),
       }).then((resp) => {
         if (resp.ok) {
+          // 完全重置页面的状态
           setValues([0, null]);
           const now = dayjs();
           setDate(now.format("YYYY-MM-DD"));
           setTime(now.format("HH:mm:ss"));
+          setDatetimeChanged(false);
           router.refresh();
         } else {
           document.dispatchEvent(
@@ -83,7 +94,7 @@ export default function AddForm() {
         }
       });
     },
-    [operation, value1, value2, date, time],
+    [operation, value1, value2, date, time, router],
   );
   return (
     <Box>
