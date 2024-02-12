@@ -26,4 +26,8 @@ public class FeedingRecordService {
     public Page<FeedingRecord> getFeedingRecordPage(Pageable pageable) {
         return feedingRecordRepo.findAll(pageable);
     }
+
+    public void deleteOne(Integer id) {
+     feedingRecordRepo.deleteById(id);
+    }
 }
