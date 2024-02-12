@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Router } from "next/router";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import dayjs from "dayjs";
+import { format } from "../util/Utils";
 
 export type FeedingRecord = {
   id: number;
@@ -59,7 +60,7 @@ export default function Item({ data }: ItemProps) {
       </Typography>
       <LocalCafe />
       <Typography variant={"body1"} display={"inline"}>
-        {data.operation}
+        {format(data.operation)}
       </Typography>
       <Typography variant={"body1"} display={"inline"}>
         {data.value1}

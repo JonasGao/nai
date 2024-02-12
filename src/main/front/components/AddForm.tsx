@@ -14,6 +14,7 @@ import FormFields, { Operation } from "./FormFields";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { AlertErrorDetail } from "./AlertDialog";
+import { format } from "../util/Utils";
 
 type AddFeedingRecord = {
   time: string;
@@ -108,23 +109,27 @@ export default function AddForm() {
           <FormControlLabel
             value="BREAST_MILK"
             control={<Radio />}
-            label="母乳"
+            label={format("BREAST_MILK")}
           />
           <FormControlLabel
             value="BOTTLE_FEEDING"
             control={<Radio />}
-            label="瓶喂"
+            label={format("BOTTLE_FEEDING")}
           />
           <FormControlLabel
             value="MILK_POWDER"
             control={<Radio />}
-            label="奶粉"
+            label={format("MILK_POWDER")}
           />
-          <FormControlLabel value="BIG_ONE" control={<Radio />} label="大号" />
+          <FormControlLabel
+            value="BIG_ONE"
+            control={<Radio />}
+            label={format("BIG_ONE")}
+          />
           <FormControlLabel
             value="LITTLE_ONE"
             control={<Radio />}
-            label="小号"
+            label={format("LITTLE_ONE")}
           />
         </RadioGroup>
       </FormControl>
