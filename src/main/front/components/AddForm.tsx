@@ -75,7 +75,7 @@ export default function AddForm() {
           operation: operation,
           value1: value1,
           value2: value2,
-          time: new Date(`${date}T${time}.000+08:00`).toISOString(),
+          time: dayjs(`${date} ${time}`).toISOString(),
         }),
       }).then((resp) => {
         if (resp.ok) {
