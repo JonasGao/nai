@@ -1,25 +1,33 @@
-import {Box, Typography} from "@mui/material";
-import {LocalCafe} from "@mui/icons-material";
-import React from "react";
-import {Operation} from "./FormFields";
+import { Box, Typography } from "@mui/material";
+import { LocalCafe } from "@mui/icons-material";
+import React, { useMemo } from "react";
+import { Operation } from "./FormFields";
 
 export type FeedingRecord = {
-  id: number,
-  date: string, time: string, operation: Operation, value1: number, value2: number
-}
+  id: number;
+  date: string;
+  time: string;
+  operation: Operation;
+  value1: number;
+  value2: number;
+};
 
 type ItemProps = {
-  data: FeedingRecord
+  data: FeedingRecord;
+};
+
+function formatDatetime({ date, time }: FeedingRecord) {
+  return new Date(`${date}T${time}.000Z`).toLocaleString();
 }
 
-export default function Item(props: ItemProps) {
-  const {data} = props;
+export default function Item({ data }: ItemProps) {
+  const datetime = useMemo(() => formatDatetime(data), [data]);
   return (
-    <Box sx={{display: "flex", alignContent: "center"}}>
+    <Box sx={{ display: "flex", alignContent: "center" }}>
       <Typography variant={"body1"} display={"inline"}>
-        {data.date} {data.time}
+        {datetime}
       </Typography>
-      <LocalCafe/>
+      <LocalCafe />
       <Typography variant={"body1"} display={"inline"}>
         {data.operation}
       </Typography>
@@ -30,5 +38,5 @@ export default function Item(props: ItemProps) {
         {data.value2}
       </Typography>
     </Box>
-  )
+  );
 }
