@@ -157,7 +157,13 @@ export default function AddForm() {
           onChange={handleValuesChange}
         />
       </Box>
-      <Button onClick={handleSubmit}>提交</Button>
+      <Button
+        onClick={handleSubmit}
+        sx={{ width: "100%" }}
+        variant={"contained"}
+      >
+        提交
+      </Button>
     </Box>
   );
 }
