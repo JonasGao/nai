@@ -7,15 +7,13 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
+  TextField,
 } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import FormFields, { Operation } from "./FormFields";
 import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from "next/navigation";
 import { AlertErrorDetail } from "./AlertDialog";
-import { DateTimePicker } from "@mui/x-date-pickers";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 type AddFeedingRecord = {
   time: string;
@@ -27,12 +25,20 @@ type AddFeedingRecord = {
 export default function AddForm() {
   const router = useRouter();
   const [operation, setOperation] = useState<Operation>(`BREAST_MILK`);
-  const [datetime, setDatetime] = useState<Dayjs | null>(null);
-  const handleDatetimeChange = useMemo(
-    () => (value: Dayjs | null) => {
-      setDatetime(value);
+  const now = dayjs();
+  const [date, setDate] = useState(now.format("YYYY-MM-DD"));
+  const [time, setTime] = useState(now.format("HH:mm:ss"));
+  const handleDateChange = useMemo(
+    () => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setDate(e.target.value);
     },
-    [setDatetime],
+    [setDate],
+  );
+  const handleTimeChange = useMemo(
+    () => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setTime(e.target.value);
+    },
+    [setTime],
   );
   const handleOperationChange = useMemo(
     () => (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
@@ -52,7 +58,6 @@ export default function AddForm() {
   );
   const handleSubmit = useMemo(
     () => () => {
-      const time = (datetime || dayjs()).toISOString();
       fetch("/api/feeding-record", {
         method: "POST",
         headers: [["Content-Type", "application/json"]],
@@ -60,12 +65,14 @@ export default function AddForm() {
           operation: operation,
           value1: value1,
           value2: value2,
-          time: time,
+          time: new Date(`${date}T${time}.000+08:00`).toISOString(),
         }),
       }).then((resp) => {
         if (resp.ok) {
           setValues([0, null]);
-          setDatetime(null);
+          const now = dayjs();
+          setDate(now.format("YYYY-MM-DD"));
+          setTime(now.format("HH:mm:ss"));
           router.refresh();
         } else {
           document.dispatchEvent(
@@ -76,7 +83,7 @@ export default function AddForm() {
         }
       });
     },
-    [operation, value1, value2, datetime],
+    [operation, value1, value2, date, time],
   );
   return (
     <Box>
@@ -111,13 +118,22 @@ export default function AddForm() {
         </RadioGroup>
       </FormControl>
       <Box component={"form"}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateTimePicker
-            label="时间"
-            value={datetime}
-            onChange={handleDatetimeChange}
-          />
-        </LocalizationProvider>
+        <TextField
+          id="date"
+          type="date"
+          label="日期"
+          variant="standard"
+          value={date}
+          onChange={handleDateChange}
+        />
+        <TextField
+          id="time"
+          type="time"
+          label="时间"
+          variant="standard"
+          value={time}
+          onChange={handleTimeChange}
+        />
         <FormFields
           operation={operation}
           value1={value1}
