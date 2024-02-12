@@ -7,13 +7,15 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-  TextField,
 } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import FormFields, { Operation } from "./FormFields";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { useRouter } from "next/navigation";
 import { AlertErrorDetail } from "./AlertDialog";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 type AddFeedingRecord = {
   time: string;
@@ -25,14 +27,10 @@ type AddFeedingRecord = {
 export default function AddForm() {
   const router = useRouter();
   const [operation, setOperation] = useState<Operation>(`BREAST_MILK`);
-  const [datetime, setDatetime] = useState<Date>();
-  const datetimeValue = useMemo(
-    () => datetime && dayjs(datetime).format("YYYY-MM-DDTHH:mm:ss"),
-    [datetime],
-  );
+  const [datetime, setDatetime] = useState<Dayjs | null>(null);
   const handleDatetimeChange = useMemo(
-    () => (e: React.ChangeEvent<HTMLInputElement>) => {
-      setDatetime(dayjs(e.target.value).toDate());
+    () => (value: Dayjs | null) => {
+      setDatetime(value);
     },
     [setDatetime],
   );
@@ -54,6 +52,7 @@ export default function AddForm() {
   );
   const handleSubmit = useMemo(
     () => () => {
+      const time = (datetime || dayjs()).toISOString();
       fetch("/api/feeding-record", {
         method: "POST",
         headers: [["Content-Type", "application/json"]],
@@ -61,12 +60,12 @@ export default function AddForm() {
           operation: operation,
           value1: value1,
           value2: value2,
-          time: (datetime || new Date()).toISOString(),
+          time: time,
         }),
       }).then((resp) => {
         if (resp.ok) {
           setValues([0, null]);
-          setDatetime(undefined);
+          setDatetime(null);
           router.refresh();
         } else {
           document.dispatchEvent(
@@ -112,14 +111,13 @@ export default function AddForm() {
         </RadioGroup>
       </FormControl>
       <Box component={"form"}>
-        <TextField
-          id="time"
-          type="datetime-local"
-          label="Time"
-          variant="standard"
-          value={datetimeValue}
-          onChange={handleDatetimeChange}
-        />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            label="时间"
+            value={datetime}
+            onChange={handleDatetimeChange}
+          />
+        </LocalizationProvider>
         <FormFields
           operation={operation}
           value1={value1}
