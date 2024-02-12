@@ -54,20 +54,35 @@ export default function Item({ data }: ItemProps) {
     [id, router],
   );
   return (
-    <Box sx={{ display: "flex", alignContent: "center" }}>
-      <Typography variant={"body1"} display={"inline"}>
-        {datetime}
-      </Typography>
-      <LocalCafe />
-      <Typography variant={"body1"} display={"inline"}>
-        {format(data.operation)}
-      </Typography>
-      <Typography variant={"body1"} display={"inline"}>
-        {data.value1}
-      </Typography>
-      <Typography variant={"body1"} display={"inline"}>
-        {data.value2}
-      </Typography>
+    <Box
+      sx={{
+        display: "flex",
+        alignContent: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignContent: "center",
+          width: "100%",
+          flexWrap: "wrap",
+        }}
+      >
+        <Typography variant={"body1"} display={"inline"}>
+          {datetime}
+        </Typography>
+        <LocalCafe />
+        <Typography variant={"body1"} display={"inline"} sx={{ width: 80 }}>
+          {format(data.operation)}
+        </Typography>
+        <Typography variant={"body1"} display={"inline"} sx={{ width: 50 }}>
+          {data.value1}
+        </Typography>
+        <Typography variant={"body1"} display={"inline"} sx={{ width: 50 }}>
+          {data.value2}
+        </Typography>
+      </Box>
       <IconButton color={"error"} onClick={handleDelete}>
         <Delete />
       </IconButton>
