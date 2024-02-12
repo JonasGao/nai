@@ -44,7 +44,14 @@ export default function Item({ data }: ItemProps) {
   const router = useRouter();
   const datetime = useMemo(() => formatDatetime(data), [data]);
   const id = data.id;
-  const handleDelete = useMemo(() => () => remove(id, router), [id, router]);
+  const handleDelete = useMemo(
+    () => () => {
+      if (confirm("确定要删除么？")) {
+        remove(id, router);
+      }
+    },
+    [id, router],
+  );
   return (
     <Box sx={{ display: "flex", alignContent: "center" }}>
       <Typography variant={"body1"} display={"inline"}>
