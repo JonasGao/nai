@@ -133,7 +133,13 @@ export default function AddForm() {
           />
         </RadioGroup>
       </FormControl>
-      <Box component={"form"}>
+      <Box
+        component={"form"}
+        sx={{
+          mx: -1,
+          "& > :not(style)": { m: 1 },
+        }}
+      >
         <TextField
           id="date"
           type="date"
