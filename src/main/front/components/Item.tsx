@@ -1,7 +1,14 @@
-import { Box, Typography } from "@mui/material";
-import { LocalCafe } from "@mui/icons-material";
+"use client";
+
+import { Box, IconButton, Typography } from "@mui/material";
+import { LocalCafe, Delete } from "@mui/icons-material";
 import React, { useMemo } from "react";
 import { Operation } from "./FormFields";
+import { AlertErrorDetail } from "./AlertDialog";
+import { useRouter } from "next/navigation";
+import { Router } from "next/router";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import dayjs from "dayjs";
 
 export type FeedingRecord = {
   id: number;
@@ -17,11 +24,27 @@ type ItemProps = {
 };
 
 function formatDatetime({ date, time }: FeedingRecord) {
-  return new Date(`${date}T${time}.000Z`).toLocaleString();
+  return dayjs(`${date}T${time}.000Z`).format("YYYY-MM-DD HH:mm:ss");
+}
+
+async function remove(id: number, router: AppRouterInstance) {
+  const resp = await fetch("/api/feeding-record/" + id, { method: "DELETE" });
+  if (resp.ok) {
+    router.refresh();
+    return;
+  }
+  document.dispatchEvent(
+    new CustomEvent<AlertErrorDetail>("alert-error", {
+      detail: { message: "提交失败了！" },
+    }),
+  );
 }
 
 export default function Item({ data }: ItemProps) {
+  const router = useRouter();
   const datetime = useMemo(() => formatDatetime(data), [data]);
+  const id = data.id;
+  const handleDelete = useMemo(() => () => remove(id, router), [id, router]);
   return (
     <Box sx={{ display: "flex", alignContent: "center" }}>
       <Typography variant={"body1"} display={"inline"}>
@@ -37,6 +60,9 @@ export default function Item({ data }: ItemProps) {
       <Typography variant={"body1"} display={"inline"}>
         {data.value2}
       </Typography>
+      <IconButton color={"error"} onClick={handleDelete}>
+        <Delete />
+      </IconButton>
     </Box>
   );
 }
