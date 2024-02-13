@@ -10,6 +10,7 @@ import { Router } from "next/router";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import dayjs from "dayjs";
 import { format } from "../util/Utils";
+import OperationIcon from "./OperationIcon";
 
 export type FeedingRecord = {
   id: number;
@@ -72,7 +73,7 @@ export default function Item({ data }: ItemProps) {
         <Typography variant={"body1"} display={"inline"}>
           {datetime}
         </Typography>
-        <LocalCafe />
+        <OperationIcon value={data.operation} />
         <Typography variant={"body1"} display={"inline"} sx={{ width: 80 }}>
           {format(data.operation)}
         </Typography>
