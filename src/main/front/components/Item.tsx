@@ -70,17 +70,19 @@ export default function Item({ data }: ItemProps) {
           flexWrap: "wrap",
         }}
       >
-        <Typography variant={"body1"} display={"inline"}>
-          {datetime}
+        <Typography variant={"body1"} display={"inline"} sx={{ width: 90 }}>
+          {data.time}
         </Typography>
-        <OperationIcon value={data.operation} />
-        <Typography variant={"body1"} display={"inline"} sx={{ width: 80 }}>
+        <Typography variant={"body1"} display={"inline"} sx={{ width: 40 }}>
+          <OperationIcon value={data.operation} />
+        </Typography>
+        <Typography variant={"body1"} display={"inline"} sx={{ width: 90 }}>
           {format(data.operation)}
         </Typography>
-        <Typography variant={"body1"} display={"inline"} sx={{ width: 50 }}>
+        <Typography variant={"body1"} display={"inline"} sx={{ width: 40 }}>
           {data.value1}
         </Typography>
-        <Typography variant={"body1"} display={"inline"} sx={{ width: 50 }}>
+        <Typography variant={"body1"} display={"inline"} sx={{ width: 40 }}>
           {data.value2}
         </Typography>
       </Box>
