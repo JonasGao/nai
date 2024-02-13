@@ -98,7 +98,7 @@ export default function AddForm() {
     [operation, value1, value2, date, time, router],
   );
   return (
-    <Box>
+    <React.Fragment>
       <FormControl>
         <RadioGroup
           value={operation}
@@ -170,6 +170,6 @@ export default function AddForm() {
       >
         提交
       </Button>
-    </Box>
+    </React.Fragment>
   );
 }
