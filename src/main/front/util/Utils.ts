@@ -1,4 +1,6 @@
 import { Operation } from "../components/FormFields";
+import dayjs from "dayjs";
+import { FeedingRecord } from "../components/Item";
 
 const map = {
   BREAST_MILK: "母乳",
@@ -10,4 +12,9 @@ const map = {
 
 export function format(v: Operation) {
   return map[v];
+}
+
+export function formatDatetime({ date, time }: FeedingRecord) {
+  const d = dayjs(`${date}T${time}.000Z`);
+  return { date: d.format("YYYY-MM-DD"), time: d.format("HH:mm:ss") };
 }

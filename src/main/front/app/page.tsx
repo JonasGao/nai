@@ -3,6 +3,7 @@ import { Box, Container, CssBaseline, Stack, Typography } from "@mui/material";
 import Item, { FeedingRecord } from "../components/Item";
 import AddForm from "../components/AddForm";
 import AlertDialog from "../components/AlertDialog";
+import { formatDatetime } from "../util/Utils";
 
 type RecordPage = {
   content: FeedingRecord[];
@@ -19,13 +20,14 @@ async function getData(): Promise<GroupRecord> {
   const data: RecordPage = await res.json();
   const arr: GroupRecord = [];
   if (data.content.length) {
-    let latestDate = data.content[0].date;
+    let { date: latestDate } = formatDatetime(data.content[0]);
     let rows: FeedingRecord[] = [];
     let group: [string, FeedingRecord[]] = [latestDate, rows];
     arr.push(group);
     data.content.forEach((i) => {
-      if (i.date !== latestDate) {
-        latestDate = i.date;
+      const { date } = formatDatetime(i);
+      if (date !== latestDate) {
+        latestDate = date;
         rows = [];
         group = [latestDate, rows];
         arr.push(group);
