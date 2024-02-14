@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Router } from "next/router";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { format } from "../util/Utils";
 import OperationIcon from "./OperationIcon";
 
@@ -27,6 +28,12 @@ type ItemProps = {
 
 function formatDatetime({ date, time }: FeedingRecord) {
   return dayjs(`${date}T${time}.000Z`).format("YYYY-MM-DD HH:mm:ss");
+}
+
+dayjs.extend(customParseFormat)
+
+function formatTime({time}: FeedingRecord) {
+  return dayjs(`${time}Z`, "HH:mm:ssZ").format("HH:mm:ss")
 }
 
 async function remove(id: number, router: AppRouterInstance) {
@@ -71,7 +78,7 @@ export default function Item({ data }: ItemProps) {
         }}
       >
         <Typography variant={"body1"} display={"inline"} sx={{ width: 90 }}>
-          {data.time}
+          {formatTime(data)}
         </Typography>
         <Typography variant={"body1"} display={"inline"} sx={{ width: 40 }}>
           <OperationIcon value={data.operation} />
