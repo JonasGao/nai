@@ -30,4 +30,8 @@ public class FeedingRecordService {
     public void deleteOne(Integer id) {
      feedingRecordRepo.deleteById(id);
     }
+
+    public void updateOne(FeedingRecord feedingRecord) {
+        feedingRecordRepo.save(feedingRecord);
+    }
 }
