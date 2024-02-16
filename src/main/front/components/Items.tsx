@@ -53,7 +53,26 @@ export default function Items({ page }: { page: GroupRecord }) {
           <Box key={date}>
             <Typography variant={"subtitle1"}>{date}</Typography>
             {rows.map((item) => (
-              <Item key={item.id} data={item} />
+              <Item
+                key={item.id}
+                data={item}
+                onChange={(changed) => {
+                  setData(
+                    data.map(([d, r]) => [
+                      d,
+                      r.map((i) => (i.id === item.id ? changed : i)),
+                    ]),
+                  );
+                }}
+                onDelete={() => {
+                  setData(
+                    data.map(([d, r]) => [
+                      d,
+                      r.filter((i) => i.id !== item.id),
+                    ]),
+                  );
+                }}
+              />
             ))}
           </Box>
         ))}

@@ -16,11 +16,14 @@ import { Delete, Edit, Cancel, Save } from "@mui/icons-material";
 import React, { useMemo, useState } from "react";
 import { Operation, operations } from "./FormFields";
 import { AlertErrorDetail } from "./AlertDialog";
-import { useRouter } from "next/navigation";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { format, formatDatetime } from "../util/Utils";
 import OperationIcon from "./OperationIcon";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export type FeedingRecord = {
   id: number;
@@ -33,19 +36,21 @@ export type FeedingRecord = {
 
 type ItemProps = {
   data: FeedingRecord;
+  onDelete: () => void;
+  onChange: (data: FeedingRecord) => void;
 };
 
-async function remove(id: number, router: AppRouterInstance) {
+async function remove(id: number) {
   const resp = await fetch("/api/feeding-record/" + id, { method: "DELETE" });
   if (resp.ok) {
-    router.refresh();
-    return;
+    return true;
   }
   document.dispatchEvent(
     new CustomEvent<AlertErrorDetail>("alert-error", {
       detail: { message: "提交失败了！" },
     }),
   );
+  return false;
 }
 
 type ItemFieldsProps = {
@@ -54,9 +59,12 @@ type ItemFieldsProps = {
 };
 
 function ItemFields({ data, onChange }: ItemFieldsProps) {
+  const { time } = useMemo(() => formatDatetime(data), [data]);
   const handleChangeTime = useMemo(
     () => (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange({ ...data, time: e.target.value });
+      const day = dayjs(`${data.date} ${e.target.value}`).tz("UTC");
+      const time = day.format("HH:mm:ss");
+      onChange({ ...data, time });
     },
     [data, onChange],
   );
@@ -89,7 +97,7 @@ function ItemFields({ data, onChange }: ItemFieldsProps) {
         InputLabelProps={{
           shrink: true,
         }}
-        value={data.time}
+        value={time}
         onChange={handleChangeTime}
       />
       <FormControl fullWidth>
@@ -150,7 +158,11 @@ function FieldsAction({ onCancel, onOk }: FieldsActionProps) {
   );
 }
 
-function ItemView({ data }: ItemProps) {
+type ItemViewProps = {
+  data: FeedingRecord;
+};
+
+function ItemView({ data }: ItemViewProps) {
   const { time } = useMemo(() => formatDatetime(data), [data]);
   return (
     <React.Fragment>
@@ -191,15 +203,17 @@ function ViewAction({ onDelete, onEdit }: ViewActionProps) {
   );
 }
 
-export default function Item({ data }: ItemProps) {
-  const router = useRouter();
+export default function Item({ data, onDelete, onChange }: ItemProps) {
   const handleDelete = useMemo(
-    () => () => {
+    () => async () => {
       if (confirm("确定要删除么？")) {
-        remove(data.id, router);
+        const res = await remove(data.id);
+        if (res) {
+          onDelete();
+        }
       }
     },
-    [data, router],
+    [data.id, onDelete],
   );
   const [edit, setEdit] = useState(false);
   const [editData, setEditData] = useState<FeedingRecord | null>(null);
@@ -219,7 +233,7 @@ export default function Item({ data }: ItemProps) {
         body: JSON.stringify(editData),
       }).then((resp) => {
         if (resp.ok) {
-          router.refresh();
+          onChange(editData!!);
         } else {
           document.dispatchEvent(
             new CustomEvent<AlertErrorDetail>("alert-error", {
@@ -230,7 +244,7 @@ export default function Item({ data }: ItemProps) {
       });
       setEdit(false);
     },
-    [editData, router],
+    [editData, onChange],
   );
   const handleChange = useMemo(
     () => (data: FeedingRecord) => setEditData(data),
