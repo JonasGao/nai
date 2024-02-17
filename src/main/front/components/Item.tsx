@@ -13,12 +13,12 @@ import {
 import { Delete, Edit, Cancel, Save } from "@mui/icons-material";
 import React, { useMemo, useState } from "react";
 import { Operation, operations } from "./FormFields";
-import { AlertErrorDetail } from "./AlertDialog";
 import { format, formatDatetime } from "../util/Utils";
 import OperationIcon from "./OperationIcon";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { alertError } from "../util/Events";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -43,11 +43,7 @@ async function remove(id: number) {
   if (resp.ok) {
     return true;
   }
-  document.dispatchEvent(
-    new CustomEvent<AlertErrorDetail>("alert-error", {
-      detail: { message: "提交失败了！" },
-    }),
-  );
+  alertError("提交失败了！");
   return false;
 }
 
@@ -233,11 +229,7 @@ export default function Item({ data, onDelete, onChange }: ItemProps) {
         if (resp.ok) {
           onChange(editData!!);
         } else {
-          document.dispatchEvent(
-            new CustomEvent<AlertErrorDetail>("alert-error", {
-              detail: { message: "提交失败了！" },
-            }),
-          );
+          alertError("提交失败了！");
         }
       });
       setEdit(false);

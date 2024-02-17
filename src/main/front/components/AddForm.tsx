@@ -9,12 +9,11 @@ import {
   RadioGroup,
   TextField,
 } from "@mui/material";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import FormFields, { Operation } from "./FormFields";
 import dayjs from "dayjs";
-import { useRouter } from "next/navigation";
-import { AlertErrorDetail } from "./AlertDialog";
 import { format } from "../util/Utils";
+import { alertError, newFeedingRecord } from "../util/Events";
 
 type AddFeedingRecord = {
   time: string;
@@ -24,28 +23,27 @@ type AddFeedingRecord = {
 };
 
 export default function AddForm() {
-  const router = useRouter();
   const [operation, setOperation] = useState<Operation>(`BREAST_MILK`);
   const now = dayjs();
   const [date, setDate] = useState(now.format("YYYY-MM-DD"));
   const [time, setTime] = useState(now.format("HH:mm:ss"));
   const [datetimeChanged, setDatetimeChanged] = useState(false);
-  const handleDateChange = useMemo(
-    () => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       setDate(e.target.value);
       setDatetimeChanged(true);
     },
     [],
   );
-  const handleTimeChange = useMemo(
-    () => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTimeChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       setTime(e.target.value);
       setDatetimeChanged(true);
     },
     [],
   );
-  const handleOperationChange = useMemo(
-    () => (_e: React.ChangeEvent<HTMLInputElement>, value: string) => {
+  const handleOperationChange = useCallback(
+    (_e: React.ChangeEvent<HTMLInputElement>, value: string) => {
       setOperation(value as Operation);
       if (!datetimeChanged) {
         // 如果没有人工修改过，则自动更新时间
@@ -60,43 +58,36 @@ export default function AddForm() {
     0,
     null,
   ]);
-  const handleValuesChange = useMemo(
-    () => (value1: number, value2: number | null) => {
+  const handleValuesChange = useCallback(
+    (value1: number, value2: number | null) => {
       setValues([value1, value2]);
     },
     [],
   );
-  const handleSubmit = useMemo(
-    () => () => {
-      fetch("/api/feeding-record", {
-        method: "POST",
-        headers: [["Content-Type", "application/json"]],
-        body: JSON.stringify({
-          operation: operation,
-          value1: value1,
-          value2: value2,
-          time: dayjs(`${date} ${time}`).toISOString(),
-        }),
-      }).then((resp) => {
-        if (resp.ok) {
-          // 完全重置页面的状态
-          setValues([0, null]);
-          const now = dayjs();
-          setDate(now.format("YYYY-MM-DD"));
-          setTime(now.format("HH:mm:ss"));
-          setDatetimeChanged(false);
-          router.refresh();
-        } else {
-          document.dispatchEvent(
-            new CustomEvent<AlertErrorDetail>("alert-error", {
-              detail: { message: "提交失败了！" },
-            }),
-          );
-        }
-      });
-    },
-    [operation, value1, value2, date, time, router],
-  );
+  const handleSubmit = useCallback(async () => {
+    const resp = await fetch("/api/feeding-record", {
+      method: "POST",
+      headers: [["Content-Type", "application/json"]],
+      body: JSON.stringify({
+        operation: operation,
+        value1: value1,
+        value2: value2,
+        time: dayjs(`${date} ${time}`).toISOString(),
+      }),
+    });
+    if (resp.ok) {
+      // 完全重置页面的状态
+      setValues([0, null]);
+      const now = dayjs();
+      setDate(now.format("YYYY-MM-DD"));
+      setTime(now.format("HH:mm:ss"));
+      setDatetimeChanged(false);
+      const record = await resp.json();
+      newFeedingRecord(record);
+    } else {
+      alertError("提交失败了！");
+    }
+  }, [operation, value1, value2, date, time]);
   return (
     <React.Fragment>
       <FormControl>

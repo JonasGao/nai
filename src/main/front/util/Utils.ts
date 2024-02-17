@@ -18,3 +18,11 @@ export function formatDatetime({ date, time }: FeedingRecord) {
   const d = dayjs(`${date}T${time}.000Z`);
   return { date: d.format("YYYY-MM-DD"), time: d.format("HH:mm:ss") };
 }
+
+export function recordDatetime({ date, time }: FeedingRecord) {
+  return dayjs(`${date}T${time}.000Z`);
+}
+
+export function descSortRecord(a: FeedingRecord, b: FeedingRecord) {
+  return recordDatetime(a).isAfter(recordDatetime(b)) ? -1 : 1;
+}

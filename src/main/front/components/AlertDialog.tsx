@@ -1,49 +1,43 @@
 "use client";
 
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import {useEffect, useMemo, useState} from "react";
+import * as React from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { useEffect, useMemo, useState } from "react";
+import { AlertErrorDetail, useAlertErrorEvent } from "../util/Events";
 
 type AlertDialogState = {
-  title?: string, message: string | null, open: boolean
-}
+  title?: string;
+  message: string | null;
+  open: boolean;
+};
 
-const defState = {open: false, message: null}
-
-export type AlertErrorDetail = {
-  title?: string, message: string
-}
+const defState = { open: false, message: null };
 
 export default function AlertDialog() {
-  const [{open, title, message}, setState] = useState<AlertDialogState>(defState)
-  const handleClose = useMemo(() => () => {
-    setState(defState)
-  }, [setState])
-  useEffect(() => {
-    const listener = (event: CustomEvent<AlertErrorDetail>) => {
-      setState({open: true, title: event.detail.title, message: event.detail.message})
-    };
-    document.addEventListener("alert-error", listener)
-    return () => {
-      document.removeEventListener("alert-error", listener)
-    }
-  }, [])
+  const [{ open, title, message }, setState] =
+    useState<AlertDialogState>(defState);
+  const handleClose = useMemo(
+    () => () => {
+      setState(defState);
+    },
+    [setState],
+  );
+  useAlertErrorEvent((event: CustomEvent<AlertErrorDetail>) => {
+    setState({
+      open: true,
+      title: event.detail.title,
+      message: event.detail.message,
+    });
+  });
   return (
     <React.Fragment>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-      >
-        {title && (
-          <DialogTitle id="alert-dialog-title">
-            {title}
-          </DialogTitle>
-        )}
+      <Dialog open={open} onClose={handleClose}>
+        {title && <DialogTitle id="alert-dialog-title">{title}</DialogTitle>}
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {message}

@@ -4,6 +4,8 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import Item, { FeedingRecord } from "./Item";
 import { fetchPageGroup } from "../app/actions";
+import { useNewFeedingRecordEvent } from "../util/Events";
+import { descSortRecord } from "../util/Utils";
 
 function LoadMore({ onLoad }: { onLoad: () => void }) {
   return (
@@ -19,19 +21,35 @@ function LoadMore({ onLoad }: { onLoad: () => void }) {
 
 export type GroupRecord = [string, FeedingRecord[]][];
 
+function mergeRows(rows0: FeedingRecord[], rows1: FeedingRecord[]) {
+  return rows1
+    .reduce((acc, row) => {
+      const index = acc.findIndex((r) => r.id === row.id);
+      if (index === -1) {
+        acc.push(row);
+      } else {
+        acc[index] = row;
+      }
+      return acc;
+    }, rows0)
+    .sort(descSortRecord);
+}
+
 function merge(data: GroupRecord, more: GroupRecord): GroupRecord {
   more.forEach(([date, rows]) => {
     const index = data.findIndex(([d]) => d === date);
     if (index === -1) {
       data.push([date, rows]);
     } else {
-      data[index][1].push(...rows);
+      data[index][1] = mergeRows(data[index][1], rows);
     }
   });
   return [...data];
 }
 
-export default function Items({ page }: { page: GroupRecord }) {
+type ItemsProps = { page: GroupRecord };
+
+export default function Items({ page }: ItemsProps) {
   const [pageNumber, setPageNumber] = useState(0);
   const [data, setData] = useState(page);
   let loading = false;
@@ -46,6 +64,9 @@ export default function Items({ page }: { page: GroupRecord }) {
     setData(merge(data, more));
     setPageNumber(p);
   };
+  useNewFeedingRecordEvent(({ detail }) => {
+    setData(merge(data, [[detail.data.date, [detail.data]]]));
+  });
   return (
     <Box>
       <Stack spacing={2} sx={{ mt: 2 }}>
