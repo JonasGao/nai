@@ -157,11 +157,11 @@ type ItemViewProps = {
 };
 
 function ItemView({ data }: ItemViewProps) {
-  const { time } = useMemo(() => formatDatetime(data), [data]);
+  const { stime } = useMemo(() => formatDatetime(data), [data]);
   return (
     <React.Fragment>
       <Typography variant={"body1"} display={"inline"} sx={{ width: 80 }}>
-        {time}
+        {stime}
       </Typography>
       <Typography variant={"body1"} display={"inline"} sx={{ width: 30 }}>
         <OperationIcon value={data.operation} />
@@ -169,12 +169,14 @@ function ItemView({ data }: ItemViewProps) {
       <Typography variant={"body1"} display={"inline"} sx={{ width: 80 }}>
         {format(data.operation)}
       </Typography>
-      <Typography variant={"body1"} display={"inline"} sx={{ width: 40 }}>
-        {data.value1}
-      </Typography>
-      <Typography variant={"body1"} display={"inline"} sx={{ width: 40 }}>
-        {data.value2}
-      </Typography>
+      <Box>
+        <Typography variant={"body1"} sx={{ width: 40 }}>
+          {data.value1}
+        </Typography>
+        <Typography variant={"body1"} sx={{ width: 40 }}>
+          {data.value2}
+        </Typography>
+      </Box>
     </React.Fragment>
   );
 }

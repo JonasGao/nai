@@ -3,6 +3,7 @@
 import { GroupRecord } from "../components/Items";
 import { FeedingRecord } from "../components/Item";
 import { formatDatetime } from "../util/Utils";
+import { Operation } from "../components/FormFields";
 
 type RecordPage = {
   content: FeedingRecord[];
@@ -37,4 +38,25 @@ export async function fetchPageGroup(page: number = 0): Promise<GroupRecord> {
     });
   }
   return arr;
+}
+
+export type Summary = {
+  date: string;
+  operation: Operation;
+  value1: number;
+  value2: number;
+  count: number;
+};
+
+export async function fetchSummary(date: string): Promise<Summary[]> {
+  const res = await fetch(
+    "http://127.0.0.1:8080/api/feeding-summary?date=" + date,
+    {
+      cache: "no-store",
+    },
+  );
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  return res.json();
 }

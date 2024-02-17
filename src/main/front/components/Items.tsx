@@ -1,11 +1,12 @@
 "use client";
 
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import Item, { FeedingRecord } from "./Item";
 import { fetchPageGroup } from "../app/actions";
 import { useNewFeedingRecordEvent } from "../util/Events";
 import { descSortRecord } from "../util/Utils";
+import Summary from "./Summary";
 
 function LoadMore({ onLoad }: { onLoad: () => void }) {
   return (
@@ -47,6 +48,41 @@ function merge(data: GroupRecord, more: GroupRecord): GroupRecord {
   return [...data];
 }
 
+function toItem(data: GroupRecord, setData: (data: GroupRecord) => void) {
+  return function WrapItem(item: FeedingRecord) {
+    return (
+      <Item
+        key={item.id}
+        data={item}
+        onChange={(changed) => {
+          setData(
+            data.map(([d, r]) => [
+              d,
+              r.map((i) => (i.id === item.id ? changed : i)),
+            ]),
+          );
+        }}
+        onDelete={() => {
+          setData(data.map(([d, r]) => [d, r.filter((i) => i.id !== item.id)]));
+        }}
+      />
+    );
+  };
+}
+
+function toDayRecord(data: GroupRecord, setData: (data: GroupRecord) => void) {
+  return function DayRecord([date, rows]: [string, FeedingRecord[]]) {
+    return (
+      <Paper key={date} sx={{ p: 2 }}>
+        <Typography variant={"h6"}>{date}</Typography>
+        <Summary date={date} />
+        <hr />
+        {rows.map(toItem(data, setData))}
+      </Paper>
+    );
+  };
+}
+
 type ItemsProps = { page: GroupRecord };
 
 export default function Items({ page }: ItemsProps) {
@@ -70,33 +106,7 @@ export default function Items({ page }: ItemsProps) {
   return (
     <Box>
       <Stack spacing={2} sx={{ mt: 2 }}>
-        {data.map(([date, rows]) => (
-          <Box key={date}>
-            <Typography variant={"subtitle1"}>{date}</Typography>
-            {rows.map((item) => (
-              <Item
-                key={item.id}
-                data={item}
-                onChange={(changed) => {
-                  setData(
-                    data.map(([d, r]) => [
-                      d,
-                      r.map((i) => (i.id === item.id ? changed : i)),
-                    ]),
-                  );
-                }}
-                onDelete={() => {
-                  setData(
-                    data.map(([d, r]) => [
-                      d,
-                      r.filter((i) => i.id !== item.id),
-                    ]),
-                  );
-                }}
-              />
-            ))}
-          </Box>
-        ))}
+        {data.map(toDayRecord(data, setData))}
       </Stack>
       <LoadMore onLoad={handleLoadMore} />
     </Box>

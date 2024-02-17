@@ -16,7 +16,11 @@ export function format(v: Operation) {
 
 export function formatDatetime({ date, time }: FeedingRecord) {
   const d = dayjs(`${date}T${time}.000Z`);
-  return { date: d.format("YYYY-MM-DD"), time: d.format("HH:mm:ss") };
+  return {
+    date: d.format("YYYY-MM-DD"),
+    time: d.format("HH:mm:ss"),
+    stime: d.format("HH:mm"),
+  };
 }
 
 export function recordDatetime({ date, time }: FeedingRecord) {
