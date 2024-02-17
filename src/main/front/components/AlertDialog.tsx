@@ -7,8 +7,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useEffect, useMemo, useState } from "react";
-import { AlertErrorDetail, useAlertErrorEvent } from "../util/Events";
+import { useMemo, useState } from "react";
+import { useAlertErrorEvent } from "../util/Events";
 
 type AlertDialogState = {
   title?: string;
