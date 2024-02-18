@@ -25,34 +25,39 @@ type FormFieldsProps = {
   onChange: (value1: number, value2: number | null) => void;
 };
 
-export default function FormFields(props: FormFieldsProps) {
+export default function FormFields({
+  operation,
+  value2,
+  value1,
+  onChange,
+}: FormFieldsProps) {
   const handleChange = useMemo(() => {
-    switch (props.operation) {
+    switch (operation) {
       case "BREAST_MILK":
-        return props.onChange;
+        return onChange;
       case "MILK_POWDER":
       case "BOTTLE_FEEDING":
-        return (value1: number) => props.onChange(value1, null);
+        return (value1: number) => onChange(value1, null);
       default:
         return null;
     }
-  }, [props.operation, props.onChange]);
-  switch (props.operation) {
+  }, [onChange, operation]);
+  switch (operation) {
     case "BREAST_MILK":
       return (
         <BreastMilkFields
-          value1={props.value1}
-          value2={props.value2}
+          value1={value1}
+          value2={value2}
           onChange={handleChange!!}
         />
       );
     case "BOTTLE_FEEDING":
       return (
         //@ts-ignore
-        <BottleFeedingFields value1={props.value1} onChange={handleChange} />
+        <BottleFeedingFields value1={value1} onChange={handleChange} />
       );
     case "MILK_POWDER":
       //@ts-ignore
-      return <MilkPowderFields value1={props.value1} onChange={handleChange} />;
+      return <MilkPowderFields value1={value1} onChange={handleChange} />;
   }
 }
