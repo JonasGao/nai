@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 import pwa from "@ducanh2912/next-pwa"
 
-const withPWA = pwa.default({ dest: "public" })
+const withPWA = pwa({ dest: "public" })
 
 const nextConfig = {
   compress: true,
