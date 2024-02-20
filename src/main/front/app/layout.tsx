@@ -2,10 +2,21 @@ import type { Metadata } from "next";
 import "./globals.css";
 import React from "react";
 
+const APP_NAME = "喂养记录小工具";
+const APP_DEFAULT_TITLE = APP_NAME;
+const APP_TITLE_TEMPLATE = "%s";
+const APP_DESCRIPTION = APP_NAME;
+
 export const metadata: Metadata = {
-  title: "喂养记录小工具",
-  description: "喂养记录小工具",
+  title: APP_DEFAULT_TITLE,
+  description: APP_DESCRIPTION,
+  manifest: "/manifest.json",
   icons: { icon: "/icon.png", apple: "/icon.png" },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: APP_DEFAULT_TITLE
+  }
 };
 
 export default function RootLayout({
