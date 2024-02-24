@@ -13,7 +13,7 @@ import {
 import { Delete, Edit, Cancel, Save } from "@mui/icons-material";
 import React, { useMemo, useState } from "react";
 import { Operation, operations } from "./FormFields";
-import { format, formatDatetime } from "../util/Utils";
+import { format } from "../util/Utils";
 import OperationIcon from "./OperationIcon";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -53,12 +53,9 @@ type ItemFieldsProps = {
 };
 
 function ItemFields({ data, onChange }: ItemFieldsProps) {
-  const { time } = useMemo(() => formatDatetime(data), [data]);
   const handleChangeTime = useMemo(
     () => (e: React.ChangeEvent<HTMLInputElement>) => {
-      const day = dayjs(`${data.date} ${e.target.value}`).tz("UTC");
-      const time = day.format("HH:mm:ss");
-      onChange({ ...data, time });
+      onChange({ ...data, time: e.target.value });
     },
     [data, onChange],
   );
@@ -91,7 +88,7 @@ function ItemFields({ data, onChange }: ItemFieldsProps) {
         InputLabelProps={{
           shrink: true,
         }}
-        value={time}
+        value={data.time}
         onChange={handleChangeTime}
       />
       <FormControl fullWidth>
@@ -157,11 +154,10 @@ type ItemViewProps = {
 };
 
 function ItemView({ data }: ItemViewProps) {
-  const { stime } = useMemo(() => formatDatetime(data), [data]);
   return (
     <React.Fragment>
       <Typography variant={"body1"} display={"inline"} sx={{ width: 80 }}>
-        {stime}
+        {data.time}
       </Typography>
       <Typography variant={"body1"} display={"inline"} sx={{ width: 30 }}>
         <OperationIcon value={data.operation} />

@@ -3,10 +3,10 @@ import { Box, Container, CssBaseline } from "@mui/material";
 import AddForm from "../components/AddForm";
 import AlertDialog from "../components/AlertDialog";
 import Items from "../components/Items";
-import { fetchPageGroup } from "./actions";
+import { fetchDaysRecords } from "./actions";
 
 export default async function Home() {
-  const data = await fetchPageGroup();
+  const data = await fetchDaysRecords();
   return (
     <React.Fragment>
       <CssBaseline />

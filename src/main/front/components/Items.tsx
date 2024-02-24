@@ -1,12 +1,11 @@
 "use client";
 
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
-import React, { useState, useTransition } from "react";
-import Item, { FeedingRecord } from "./Item";
-import { fetchPageGroup } from "../app/actions";
-import { useNewFeedingRecordEvent } from "../util/Events";
-import { descSortRecord } from "../util/Utils";
+import React, { useCallback } from "react";
+import Item from "./Item";
+import { type DayRecord } from "../app/actions";
 import Summary from "./Summary";
+import { useRouter } from "next/navigation";
 
 function LoadMore({
   onLoad,
@@ -27,92 +26,36 @@ function LoadMore({
   );
 }
 
-export type GroupRecord = [string, FeedingRecord[]][];
-
-function mergeRows(rows0: FeedingRecord[], rows1: FeedingRecord[]) {
-  return rows1
-    .reduce((acc, row) => {
-      const index = acc.findIndex((r) => r.id === row.id);
-      if (index === -1) {
-        acc.push(row);
-      } else {
-        acc[index] = row;
-      }
-      return acc;
-    }, rows0)
-    .sort(descSortRecord);
+function DayRecordPaper({ date, records, summary }: DayRecord) {
+  if (!summary) {
+    console.log("is null", date);
+  }
+  const router = useRouter();
+  const refresh = useCallback(() => {
+    router.refresh();
+  }, [router]);
+  return (
+    <Paper sx={{ p: 2 }}>
+      <Typography variant={"h6"}>{date}</Typography>
+      <Summary data={summary} />
+      <hr />
+      {records.map((row) => (
+        <Item key={row.id} data={row} onChange={refresh} onDelete={refresh} />
+      ))}
+    </Paper>
+  );
 }
 
-function merge(data: GroupRecord, more: GroupRecord): GroupRecord {
-  more.forEach(([date, rows]) => {
-    const index = data.findIndex(([d]) => d === date);
-    if (index === -1) {
-      data.push([date, rows]);
-    } else {
-      data[index][1] = mergeRows(data[index][1], rows);
-    }
-  });
-  return [...data];
-}
-
-function toItem(data: GroupRecord, setData: (data: GroupRecord) => void) {
-  return function WrapItem(item: FeedingRecord) {
-    return (
-      <Item
-        key={item.id}
-        data={item}
-        onChange={(changed) => {
-          setData(
-            data.map(([d, r]) => [
-              d,
-              r.map((i) => (i.id === item.id ? changed : i)),
-            ]),
-          );
-        }}
-        onDelete={() => {
-          setData(data.map(([d, r]) => [d, r.filter((i) => i.id !== item.id)]));
-        }}
-      />
-    );
-  };
-}
-
-function toDayRecord(data: GroupRecord, setData: (data: GroupRecord) => void) {
-  return function DayRecord([date, rows]: [string, FeedingRecord[]]) {
-    return (
-      <Paper key={date} sx={{ p: 2 }}>
-        <Typography variant={"h6"}>{date}</Typography>
-        <Summary date={date} />
-        <hr />
-        {rows.map(toItem(data, setData))}
-      </Paper>
-    );
-  };
-}
-
-type ItemsProps = { page: GroupRecord };
+type ItemsProps = { page: DayRecord[] };
 
 export default function Items({ page }: ItemsProps) {
-  const [pageNumber, setPageNumber] = useState(0);
-  const [data, setData] = useState(page);
-  const [loading, startTransition] = useTransition();
-  const handleLoadMore = async () => {
-    const p = pageNumber + 1;
-    const more = await fetchPageGroup(p);
-    startTransition(() => {
-      setData(merge(data, more));
-      setPageNumber(p);
-    });
-  };
-  useNewFeedingRecordEvent(({ detail }) => {
-    setData(merge(data, [[detail.data.date, [detail.data]]]));
-  });
   return (
     <Box>
       <Stack spacing={2} sx={{ mt: 2 }}>
-        {data.map(toDayRecord(data, setData))}
+        {page.map((row) => (
+          <DayRecordPaper key={row.date} {...row} />
+        ))}
       </Stack>
-      <LoadMore disabled={loading} onLoad={handleLoadMore} />
     </Box>
   );
 }

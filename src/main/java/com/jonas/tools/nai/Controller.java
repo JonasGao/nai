@@ -35,6 +35,11 @@ public class Controller {
         return feedingRecordService.getFeedingRecordPage(pageRequest);
     }
 
+    @GetMapping("/api/days-feeding-records")
+    public List<DaysFeedingRecord> getDaysFeedingRecords(DaysFeedingRecordParams params) {
+        return feedingRecordService.getDaysFeedingRecords(params);
+    }
+
     @DeleteMapping("/api/feeding-record/{id}")
     public void deleteFeedingRecord(@PathVariable("id") Integer id) {
         feedingRecordService.deleteOne(id);

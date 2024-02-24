@@ -13,14 +13,8 @@ import React, { useCallback, useState } from "react";
 import FormFields, { Operation } from "./FormFields";
 import dayjs from "dayjs";
 import { format } from "../util/Utils";
-import { alertError, newFeedingRecord } from "../util/Events";
-
-type AddFeedingRecord = {
-  time: string;
-  operation: Operation;
-  value1: number;
-  value2: number | null;
-};
+import { alertError } from "../util/Events";
+import { useRouter } from "next/navigation";
 
 export default function AddForm() {
   const [operation, setOperation] = useState<Operation>(`BREAST_MILK`);
@@ -64,6 +58,7 @@ export default function AddForm() {
     },
     [],
   );
+  const router = useRouter();
   const handleSubmit = useCallback(async () => {
     const resp = await fetch("/api/feeding-record", {
       method: "POST",
@@ -72,7 +67,8 @@ export default function AddForm() {
         operation: operation,
         value1: value1,
         value2: value2,
-        time: dayjs(`${date} ${time}`).toISOString(),
+        date: date,
+        time: time,
       }),
     });
     if (resp.ok) {
@@ -82,12 +78,11 @@ export default function AddForm() {
       setDate(now.format("YYYY-MM-DD"));
       setTime(now.format("HH:mm:ss"));
       setDatetimeChanged(false);
-      const record = await resp.json();
-      newFeedingRecord(record);
+      router.refresh();
     } else {
       alertError("提交失败了！");
     }
-  }, [operation, value1, value2, date, time]);
+  }, [operation, value1, value2, date, time, router]);
   return (
     <React.Fragment>
       <FormControl>

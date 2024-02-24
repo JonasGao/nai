@@ -15,12 +15,12 @@ import java.time.LocalTime;
  * @param value1    喂养数据
  * @param value2    喂养数据
  */
-public record AddFeedingRecord(@NotNull LocalDateTime time, @NotNull Operation operation,
+public record AddFeedingRecord(@NotNull LocalDate date, @NotNull LocalTime time, @NotNull Operation operation,
                                @NotNull Integer value1, Integer value2) {
     public FeedingRecord initFeedingRecord() {
         FeedingRecord feedingRecord = new FeedingRecord();
-        feedingRecord.setDate(time.toLocalDate());
-        feedingRecord.setTime(time.toLocalTime());
+        feedingRecord.setDate(date);
+        feedingRecord.setTime(time);
         feedingRecord.setOperation(operation);
         feedingRecord.setValue1(value1);
         feedingRecord.setValue2(value2);

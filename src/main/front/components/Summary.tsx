@@ -1,17 +1,11 @@
 import { Box, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { fetchSummary, Summary } from "../app/actions";
+import React from "react";
 import { format } from "../util/Utils";
+import { type Summary } from "../app/actions";
 
-type SummaryProps = { date: string };
+type SummaryProps = { data: Summary[] };
 
-export default function Summary({ date }: SummaryProps) {
-  const [data, setData] = useState<Summary[]>([]);
-  useEffect(() => {
-    fetchSummary(date).then((data) => {
-      setData(data);
-    });
-  }, [date]);
+export default function Summary({ data }: SummaryProps) {
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap" }}>
       {data.map((item) => (
