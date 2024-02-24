@@ -1,18 +1,25 @@
 "use client";
 
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import Item, { FeedingRecord } from "./Item";
 import { fetchPageGroup } from "../app/actions";
 import { useNewFeedingRecordEvent } from "../util/Events";
 import { descSortRecord } from "../util/Utils";
 import Summary from "./Summary";
 
-function LoadMore({ onLoad }: { onLoad: () => void }) {
+function LoadMore({
+  onLoad,
+  disabled,
+}: {
+  onLoad: () => void;
+  disabled: boolean;
+}) {
   return (
     <Button
       variant={"outlined"}
       sx={{ width: "100%", mb: 4, mt: 2 }}
+      disabled={disabled}
       onClick={onLoad}
     >
       加载更多...
@@ -88,17 +95,14 @@ type ItemsProps = { page: GroupRecord };
 export default function Items({ page }: ItemsProps) {
   const [pageNumber, setPageNumber] = useState(0);
   const [data, setData] = useState(page);
-  let loading = false;
+  const [loading, startTransition] = useTransition();
   const handleLoadMore = async () => {
-    if (loading) {
-      return;
-    }
-    loading = true;
     const p = pageNumber + 1;
     const more = await fetchPageGroup(p);
-    loading = false;
-    setData(merge(data, more));
-    setPageNumber(p);
+    startTransition(() => {
+      setData(merge(data, more));
+      setPageNumber(p);
+    });
   };
   useNewFeedingRecordEvent(({ detail }) => {
     setData(merge(data, [[detail.data.date, [detail.data]]]));
@@ -108,7 +112,7 @@ export default function Items({ page }: ItemsProps) {
       <Stack spacing={2} sx={{ mt: 2 }}>
         {data.map(toDayRecord(data, setData))}
       </Stack>
-      <LoadMore onLoad={handleLoadMore} />
+      <LoadMore disabled={loading} onLoad={handleLoadMore} />
     </Box>
   );
 }
