@@ -57,6 +57,7 @@
   </dependencies>
 
   <build>
+    <finalName>nai</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
