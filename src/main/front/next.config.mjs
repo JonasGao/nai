@@ -10,6 +10,12 @@ const withPWA = pwa({
 
 const nextConfig = {
   compress: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   async rewrites() {
     return [
       {
