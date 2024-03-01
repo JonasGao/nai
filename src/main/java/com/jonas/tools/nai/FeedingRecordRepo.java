@@ -14,4 +14,6 @@ public interface FeedingRecordRepo extends JpaRepository<FeedingRecord, Integer>
     List<FeedingRecord> findByDateIn(Collection<LocalDate> dates, Sort sort);
 
     List<RecordDate> findDistinctByDateLessThanEqual(LocalDate date, Pageable page);
+
+    List<RecordDate> findDistinct(Pageable page);
 }

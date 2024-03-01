@@ -10,5 +10,5 @@ public class DaysFeedingRecordParams {
 
     private int size = 3;
 
-    private LocalDate start = LocalDate.now();
+    private LocalDate start;
 }

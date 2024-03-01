@@ -9,8 +9,12 @@ export type DayRecord = {
   summary: Summary[];
 };
 
-export async function fetchDaysRecords(page: number = 0): Promise<DayRecord[]> {
-  const res = await fetch("http://127.0.0.1:8080/api/days-feeding-records", {
+export async function fetchDaysRecords(start?: string): Promise<DayRecord[]> {
+  const url = new URL("http://127.0.0.1:8080/api/days-feeding-records");
+  if (start) {
+    url.searchParams.append("start", start);
+  }
+  const res = await fetch(url.toString(), {
     cache: "no-store",
   });
   if (!res.ok) {
