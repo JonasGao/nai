@@ -1,6 +1,5 @@
 package com.jonas.tools.nai;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +14,5 @@ public interface FeedingRecordRepo extends JpaRepository<FeedingRecord, Integer>
 
     List<RecordDate> findDistinctByDateLessThanEqual(LocalDate date, Pageable page);
 
-    List<RecordDate> findDistinct(Pageable page);
+    List<RecordDate> findDistinctBy(Pageable page);
 }

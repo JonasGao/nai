@@ -5,10 +5,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,7 +50,7 @@ public class FeedingRecordService {
         List<RecordDate> distinctByDateLessThanEqual;
         if (start == null) {
             log.info("start is null, query top {} records", params.getSize());
-            distinctByDateLessThanEqual = feedingRecordRepo.findDistinct(page);
+            distinctByDateLessThanEqual = feedingRecordRepo.findDistinctBy(page);
         } else {
             log.info("start is {}, query records before this date", start);
             distinctByDateLessThanEqual = feedingRecordRepo.findDistinctByDateLessThanEqual(start, page);
@@ -68,6 +65,7 @@ public class FeedingRecordService {
         for (Map.Entry<LocalDate, List<FeedingRecord>> entry : recordMap.entrySet()) {
             result.add(new DaysFeedingRecord(entry.getKey(), entry.getValue(), summaryMap.get(entry.getKey())));
         }
+        result.sort(Comparator.comparing(DaysFeedingRecord::getDate).reversed());
         return result;
     }
 }
