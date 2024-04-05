@@ -2,6 +2,7 @@
 
 import { FeedingRecord } from "../components/Item";
 import { Operation } from "../components/FormFields";
+import {BACKEND} from "../util/Constants";
 
 export type DayRecord = {
   date: string;
@@ -10,7 +11,7 @@ export type DayRecord = {
 };
 
 export async function fetchDaysRecords(start?: string): Promise<DayRecord[]> {
-  const url = new URL("http://127.0.0.1:8080/api/days-feeding-records");
+  const url = new URL(`${BACKEND}/api/days-feeding-records`);
   if (start) {
     url.searchParams.append("start", start);
   }
