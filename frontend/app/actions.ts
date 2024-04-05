@@ -2,15 +2,17 @@
 
 import { FeedingRecord } from "../components/Item";
 import { Operation } from "../components/FormFields";
-import {BACKEND} from "../util/Constants";
+import { BACKEND } from "../util/Constants";
 
-export type DayRecord = {
+export type DayRecordData = {
   date: string;
   records: FeedingRecord[];
   summary: Summary[];
 };
 
-export async function fetchDaysRecords(start?: string): Promise<DayRecord[]> {
+export async function fetchDaysRecords(
+  start?: string,
+): Promise<DayRecordData[]> {
   const url = new URL(`${BACKEND}/api/days-feeding-records`);
   if (start) {
     url.searchParams.append("start", start);
@@ -21,7 +23,7 @@ export async function fetchDaysRecords(start?: string): Promise<DayRecord[]> {
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
-  const data: DayRecord[] = await res.json();
+  const data: DayRecordData[] = await res.json();
   return data;
 }
 

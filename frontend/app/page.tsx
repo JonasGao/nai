@@ -1,8 +1,8 @@
 import React from "react";
-import { Box, Container, CssBaseline } from "@mui/material";
+import { Container, CssBaseline } from "@mui/material";
 import AddForm from "../components/AddForm";
 import AlertDialog from "../components/AlertDialog";
-import Items from "../components/Items";
+import LatestRecords from "../components/LatestRecords";
 import { fetchDaysRecords } from "./actions";
 import MyAppBar from "../components/MyAppBar";
 
@@ -13,10 +13,8 @@ export default async function Home() {
       <CssBaseline />
       <MyAppBar />
       <Container maxWidth="sm">
-        <Box>
-          <AddForm />
-        </Box>
-        <Items page={data} />
+        <AddForm />
+        <LatestRecords page={data} />
         <AlertDialog />
       </Container>
     </React.Fragment>

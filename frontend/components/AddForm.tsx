@@ -8,6 +8,7 @@ import {
   Radio,
   RadioGroup,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { useCallback, useState } from "react";
 import FormFields, { Operation } from "./FormFields";
@@ -84,7 +85,10 @@ export default function AddForm() {
     }
   }, [operation, value1, value2, date, time, router]);
   return (
-    <React.Fragment>
+    <Box>
+      <Typography variant={"h5"} sx={{ my: 2 }}>
+        添加记录
+      </Typography>
       <FormControl>
         <RadioGroup
           value={operation}
@@ -156,6 +160,6 @@ export default function AddForm() {
       >
         提交
       </Button>
-    </React.Fragment>
+    </Box>
   );
 }

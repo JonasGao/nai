@@ -7,9 +7,9 @@ type SummaryProps = { data: Summary[] };
 
 export default function Summary({ data }: SummaryProps) {
   return (
-    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+    <Box sx={{ display: "flex", flexWrap: "wrap", my: 1 }}>
       {data.map((item) => (
-        <Typography key={item.operation} variant={"subtitle2"} sx={{ mr: 2 }}>
+        <Typography key={item.operation} variant={"subtitle1"} sx={{ mr: 2 }}>
           {format(item.operation)}：{item.count} 次，{item.value1}
           {item.value2 && "，" + item.value2}
         </Typography>
