@@ -160,7 +160,7 @@ export default function AddForm() {
           sx={{ width: "100%" }}
           variant={"contained"}
         >
-          提交
+          添加
         </Button>
       </Paper>
     </Box>
