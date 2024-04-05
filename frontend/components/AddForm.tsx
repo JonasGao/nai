@@ -5,6 +5,7 @@ import {
   Button,
   FormControl,
   FormControlLabel,
+  Paper,
   Radio,
   RadioGroup,
   TextField,
@@ -89,77 +90,79 @@ export default function AddForm() {
       <Typography variant={"h5"} sx={{ my: 2 }}>
         添加记录
       </Typography>
-      <FormControl>
-        <RadioGroup
-          value={operation}
-          onChange={handleOperationChange}
-          row
-          name="operations"
+      <Paper sx={{ p: 2 }}>
+        <FormControl>
+          <RadioGroup
+            value={operation}
+            onChange={handleOperationChange}
+            row
+            name="operations"
+          >
+            <FormControlLabel
+              value="BREAST_MILK"
+              control={<Radio />}
+              label={format("BREAST_MILK")}
+            />
+            <FormControlLabel
+              value="BOTTLE_FEEDING"
+              control={<Radio />}
+              label={format("BOTTLE_FEEDING")}
+            />
+            <FormControlLabel
+              value="MILK_POWDER"
+              control={<Radio />}
+              label={format("MILK_POWDER")}
+            />
+            <FormControlLabel
+              value="BIG_ONE"
+              control={<Radio />}
+              label={format("BIG_ONE")}
+            />
+            <FormControlLabel
+              value="LITTLE_ONE"
+              control={<Radio />}
+              label={format("LITTLE_ONE")}
+            />
+          </RadioGroup>
+        </FormControl>
+        <Box
+          component={"form"}
+          sx={{
+            mx: -1,
+            "& > :not(style)": { m: 1 },
+          }}
         >
-          <FormControlLabel
-            value="BREAST_MILK"
-            control={<Radio />}
-            label={format("BREAST_MILK")}
+          <TextField
+            id="date"
+            type="date"
+            label="日期"
+            variant="standard"
+            value={date}
+            onChange={handleDateChange}
           />
-          <FormControlLabel
-            value="BOTTLE_FEEDING"
-            control={<Radio />}
-            label={format("BOTTLE_FEEDING")}
+          <TextField
+            id="time"
+            type="time"
+            label="时间"
+            variant="standard"
+            value={time}
+            onChange={handleTimeChange}
           />
-          <FormControlLabel
-            value="MILK_POWDER"
-            control={<Radio />}
-            label={format("MILK_POWDER")}
+          <FormFields
+            operation={operation}
+            value1={value1}
+            value2={value2}
+            onChange={handleValuesChange}
           />
-          <FormControlLabel
-            value="BIG_ONE"
-            control={<Radio />}
-            label={format("BIG_ONE")}
-          />
-          <FormControlLabel
-            value="LITTLE_ONE"
-            control={<Radio />}
-            label={format("LITTLE_ONE")}
-          />
-        </RadioGroup>
-      </FormControl>
-      <Box
-        component={"form"}
-        sx={{
-          mx: -1,
-          "& > :not(style)": { m: 1 },
-        }}
-      >
-        <TextField
-          id="date"
-          type="date"
-          label="日期"
-          variant="standard"
-          value={date}
-          onChange={handleDateChange}
-        />
-        <TextField
-          id="time"
-          type="time"
-          label="时间"
-          variant="standard"
-          value={time}
-          onChange={handleTimeChange}
-        />
-        <FormFields
-          operation={operation}
-          value1={value1}
-          value2={value2}
-          onChange={handleValuesChange}
-        />
-      </Box>
-      <Button
-        onClick={handleSubmit}
-        sx={{ width: "100%" }}
-        variant={"contained"}
-      >
-        提交
-      </Button>
+        </Box>
+        <Button
+          onClick={handleSubmit}
+          sx={{ width: "100%" }}
+          variant={"contained"}
+        >
+          提交
+        </Button>
+      </Paper>
     </Box>
   );
 }

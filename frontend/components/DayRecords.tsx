@@ -14,7 +14,7 @@ export default function DayRecords({ date, records, summary }: DayRecordData) {
     router.refresh();
   }, [router]);
   return (
-    <Paper sx={{ p: 2 }} elevation={2}>
+    <Paper sx={{ p: 2 }}>
       <Typography variant={"h6"}>{date}</Typography>
       <Summary data={summary} />
       {records.map((row) => (
