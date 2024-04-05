@@ -1,10 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import React from "react";
-
-const APP_NAME = "喂养记录小工具";
-const APP_DEFAULT_TITLE = APP_NAME;
-const APP_DESCRIPTION = APP_NAME;
+import { APP_DEFAULT_TITLE, APP_DESCRIPTION } from "../util/Constants";
 
 export const metadata: Metadata = {
   title: APP_DEFAULT_TITLE,
@@ -13,13 +10,13 @@ export const metadata: Metadata = {
   icons: { icon: "/icon.png", apple: "/icon.png" },
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: APP_DEFAULT_TITLE,
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FFFFFF",
+  themeColor: "#1976d2",
 };
 
 export default function RootLayout({

@@ -4,12 +4,14 @@ import AddForm from "../components/AddForm";
 import AlertDialog from "../components/AlertDialog";
 import Items from "../components/Items";
 import { fetchDaysRecords } from "./actions";
+import MyAppBar from "../components/MyAppBar";
 
 export default async function Home() {
   const data = await fetchDaysRecords();
   return (
     <React.Fragment>
       <CssBaseline />
+      <MyAppBar />
       <Container maxWidth="sm">
         <Box>
           <AddForm />
