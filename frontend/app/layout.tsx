@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import React from "react";
 import { APP_DEFAULT_TITLE, APP_DESCRIPTION } from "../util/Constants";
+import FixedBg from "../components/FixedBg";
 
 export const metadata: Metadata = {
   title: APP_DEFAULT_TITLE,
@@ -26,7 +27,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="cn">
-      <body style={{ background: "#F8F9FF" }}>{children}</body>
+      <body>
+        <FixedBg />
+        {children}
+      </body>
     </html>
   );
 }

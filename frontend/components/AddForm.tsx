@@ -90,7 +90,7 @@ export default function AddForm() {
       <Typography variant={"h5"} sx={{ my: 2 }}>
         添加记录
       </Typography>
-      <Paper sx={{ p: 2 }}>
+      <Paper sx={{ p: 2, backgroundColor: "rgba(255,255,255,0.7)" }}>
         <FormControl>
           <RadioGroup
             value={operation}

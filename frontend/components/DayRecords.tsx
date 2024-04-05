@@ -24,7 +24,7 @@ export default function DayRecords({ date, records, summary }: DayRecordData) {
     router.refresh();
   }, [router]);
   return (
-    <Paper sx={{ p: 2 }}>
+    <Paper sx={{ p: 2, backgroundColor: "rgba(255,255,255,0.7)" }}>
       <Typography variant={"h6"}>{format(date)}</Typography>
       <Summary data={summary} />
       {records.map((row) => (
