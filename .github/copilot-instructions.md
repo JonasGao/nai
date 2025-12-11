@@ -25,6 +25,7 @@ nai/
 │   │   │   │   ├── FeedingRecordRepo.java        # 喂养记录数据访问层
 │   │   │   │   ├── FeedingRecordService.java     # 喂养记录业务逻辑层
 │   │   │   │   ├── FeedingSummary.java           # 喂养汇总实体
+│   │   │   │   ├── FeedingSummaryId.java         # 喂养汇总复合主键
 │   │   │   │   ├── FeedingSummaryRepo.java       # 喂养汇总数据访问层
 │   │   │   │   ├── Operation.java                # 喂养操作类型枚举
 │   │   │   │   ├── AddFeedingRecord.java         # 添加喂养记录 DTO
@@ -186,13 +187,20 @@ nai/
 ```yaml
 spring:
   datasource:
-    url: jdbc:mysql://your-host:3306/nai
-    username: your-username
-    password: your-password
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/nai
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:your-password}
   jpa:
     open-in-view: false
-    show-sql: true  # 生产环境建议设为 false
+    show-sql: ${JPA_SHOW_SQL:false}  # 生产环境建议设为 false
 ```
+
+**建议使用环境变量**来管理敏感配置，避免在配置文件中硬编码：
+- `DB_HOST`: 数据库主机地址
+- `DB_PORT`: 数据库端口
+- `DB_USERNAME`: 数据库用户名
+- `DB_PASSWORD`: 数据库密码
+- `JPA_SHOW_SQL`: 是否显示 SQL 日志
 
 #### 数据库初始化
 执行 `backend/src/main/sql/init.sql` 创建数据表。
