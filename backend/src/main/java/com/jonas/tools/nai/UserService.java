@@ -55,6 +55,14 @@ public class UserService {
     
     @Transactional
     public void deleteUser(Long id) {
+        // Prevent deletion of admin users
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        if (user.getUserType() == UserType.ADMIN) {
+            throw new IllegalArgumentException("Cannot delete admin users");
+        }
+        
         userRepo.deleteById(id);
     }
 }
