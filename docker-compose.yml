@@ -1,0 +1,46 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: nai-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-nai_password}
+      MYSQL_DATABASE: nai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./backend/src/main/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - nai-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: ghcr.io/jonasgao/nai:latest
+    container_name: nai-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_PASSWORD:-nai_password}
+      SPRING_PROFILES_ACTIVE: production
+      NODE_ENV: production
+    ports:
+      - "8080:8080"
+      - "3000:3000"
+    networks:
+      - nai-network
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
+
+networks:
+  nai-network:
+    driver: bridge

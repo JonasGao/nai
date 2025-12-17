@@ -22,7 +22,24 @@ A comprehensive baby feeding tracking application with user authentication and m
 
 ## Quick Start
 
-### Prerequisites
+### Option 1: Docker (Recommended)
+
+The easiest way to run NAI is using Docker:
+
+```bash
+# Start the application with Docker Compose
+docker-compose up -d
+
+# Access the application
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:8080
+```
+
+For detailed Docker deployment instructions, see [DOCKER.md](DOCKER.md).
+
+### Option 2: Manual Setup
+
+#### Prerequisites
 
 - Java 17 or higher
 - Maven 3.6+
@@ -30,7 +47,7 @@ A comprehensive baby feeding tracking application with user authentication and m
 - Node.js 20+
 - npm or yarn
 
-### Backend Setup
+#### Backend Setup
 
 1. Navigate to the backend directory:
    ```bash
@@ -59,7 +76,7 @@ A comprehensive baby feeding tracking application with user authentication and m
 
 The backend will start on `http://localhost:8080`
 
-### Frontend Setup
+#### Frontend Setup
 
 1. Navigate to the frontend directory:
    ```bash
@@ -182,10 +199,44 @@ cd frontend
 npm run build
 ```
 
+## Deployment
+
+### Docker Deployment (Recommended)
+
+NAI can be easily deployed using Docker and Docker Compose. See [DOCKER.md](DOCKER.md) for detailed instructions.
+
+**Quick deployment:**
+```bash
+docker-compose up -d
+```
+
+### Pre-built Docker Images
+
+Pre-built images are available from GitHub Container Registry:
+```bash
+docker pull ghcr.io/jonasgao/nai:latest
+```
+
+### CI/CD
+
+The project includes automated CI/CD with GitHub Actions:
+- Automatic builds on tag push (e.g., `v1.0.0`)
+- Release artifacts (backend JAR, frontend tarball)
+- Multi-architecture Docker images (amd64, arm64)
+- Published to GitHub Container Registry (GHCR)
+
+To create a new release:
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
 ## Project Structure
 
 ```
 nai/
+├── .github/
+│   └── workflows/    # GitHub Actions CI/CD
 ├── backend/          # Spring Boot application
 │   ├── src/
 │   │   ├── main/
@@ -201,6 +252,9 @@ nai/
 │   │   └── users/    # User management (admin)
 │   ├── components/   # React components
 │   └── package.json
+├── Dockerfile        # Multi-stage Docker build
+├── docker-compose.yml # Docker Compose configuration
+├── DOCKER.md         # Docker deployment guide
 └── SECURITY.md       # Security documentation
 ```
 
