@@ -21,6 +21,8 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 # Install Node.js for running Next.js
+# Note: This creates a mixed runtime environment with both Java and Node.js
+# For production, consider using separate containers with a reverse proxy
 RUN apk add --no-cache nodejs npm
 
 # Copy backend jar
@@ -33,15 +35,9 @@ COPY --from=frontend-builder /app/frontend/package*.json ./frontend/
 COPY --from=frontend-builder /app/frontend/node_modules ./frontend/node_modules
 COPY --from=frontend-builder /app/frontend/next.config.mjs ./frontend/
 
-# Create startup script
-RUN echo '#!/bin/sh' > /app/start.sh && \
-    echo 'cd /app/backend && java -jar nai.jar &' >> /app/start.sh && \
-    echo 'BACKEND_PID=$!' >> /app/start.sh && \
-    echo 'cd /app/frontend && npm start &' >> /app/start.sh && \
-    echo 'FRONTEND_PID=$!' >> /app/start.sh && \
-    echo 'trap "kill $BACKEND_PID $FRONTEND_PID; exit" SIGTERM SIGINT' >> /app/start.sh && \
-    echo 'wait' >> /app/start.sh && \
-    chmod +x /app/start.sh
+# Copy startup script
+COPY docker/start.sh /app/start.sh
+RUN chmod +x /app/start.sh
 
 # Expose ports
 EXPOSE 8080 3000
