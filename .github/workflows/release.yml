@@ -17,7 +17,7 @@ permissions:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,7 +40,7 @@ jobs:
         run: |
           cd backend
           mvn clean package -DskipTests
-          
+
       - name: Build frontend
         run: |
           cd frontend
@@ -55,7 +55,9 @@ jobs:
       - name: Package frontend artifact
         run: |
           cd frontend
-          tar -czf ../artifacts/nai-frontend.tar.gz .next public package.json package-lock.json next.config.mjs node_modules
+          tar -czf ../artifacts/nai-frontend.tar.gz \
+            .next public package.json package-lock.json \
+            next.config.mjs node_modules
 
       - name: Extract version from tag
         id: version
